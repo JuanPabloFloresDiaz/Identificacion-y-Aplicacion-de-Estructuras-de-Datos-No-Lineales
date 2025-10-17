@@ -24,20 +24,25 @@ PLANTEAMIENTO Y JUSTIFICACIÓN (estructura no lineal recomendada)
 			- pila_adelante: guarda las páginas a las que se puede volver a avanzar
 	* Esto separa: (1) la topología (grafo) de (2) la mecánica de navegación (pilas).
 
-Complejidad esperada:
-- visitar(url): O(1) amortizado (push a pila_atras, limpiar pila_adelante,
-	crear nodos/aristas si no existen)
-- atras(): O(1) si hay elementos
-- adelante(): O(1) si hay elementos
-- registrar arista en el grafo: O(1) usando listas o conjuntos de adyacencia
 
-Casos borde a contemplar:
-- atras() con pila_atras vacía: no hace nada y se informa al usuario.
-- adelante() con pila_adelante vacía: no hace nada y se informa al usuario.
-- visitar(url) cuando no hay página actual (primera visita): solo establece
-	actual=url (no se empuja nada a pila_atras) y crea el nodo en el grafo.
-- visitas repetidas a la misma URL: se registran, evitando duplicar aristas si
-	usamos conjuntos de adyacencia.
+¿Cómo se gestionan los estados de navegación?
+---------------------------------------------
+El estado de navegación se gestiona mediante tres componentes principales:
+1. Una variable `actual` que almacena la página actual visitada.
+2. Una pila `pila_atras` que guarda el historial de páginas previas (para retroceder).
+3. Una pila `pila_adelante` que almacena las páginas a las que se puede avanzar tras retroceder.
+
+Cuando el usuario visita una nueva página:
+- Si hay una página actual, se guarda en `pila_atras` y se limpia `pila_adelante` (se inicia una nueva rama de navegación).
+- Se actualiza la variable `actual` con la nueva URL.
+
+Al usar "atras":
+- Se mueve la página actual a `pila_adelante` y se recupera la última página de `pila_atras` como nueva actual.
+
+Al usar "adelante":
+- Se mueve la página actual a `pila_atras` y se recupera la última página de `pila_adelante` como nueva actual.
+
+Así, el sistema permite navegar hacia atrás y adelante de forma eficiente, manteniendo el historial y permitiendo ramificaciones en la navegación, tal como ocurre en los navegadores reales.
 
 
 CÓMO LO IMPLEMENTAREMOS (plan de implementación)
